@@ -32,70 +32,92 @@ resources = {
     "money": 0.0,
 }
 
-coin = {
+COINS = {
     "quarters": 0.25,
     "dimes": 0.10,
     "nickels": 0.05,
     "pennies": 0.01,
 }
 
+
 def process_coins():
+    """Prompt user to insert coins and calculate the total value."""
     print("Please insert coins.")
-    quarters = int(input("How many quarters? ")) * coin["quarters"]
-    dimes = int(input("How many dimes? ")) * coin["dimes"]
-    nickels = int(input("How many nickels? ")) * coin["nickels"]
-    pennies = int(input("How many pennies? ")) * coin["pennies"]
+    quarters = int(input("How many quarters? ")) * COINS["quarters"]
+    dimes = int(input("How many dimes? ")) * COINS["dimes"]
+    nickels = int(input("How many nickels? ")) * COINS["nickels"]
+    pennies = int(input("How many pennies? ")) * COINS["pennies"]
 
     total = quarters + dimes + nickels + pennies
     return total
 
+
+def check_resources(coffee_type):
+    """Check if there are enough resources to make the selected coffee."""
+    for ingredient, amount in MENU[coffee_type]["ingredients"].items():
+        if resources[ingredient] < amount:
+            print(f"Sorry, there is not enough {ingredient}.")
+            return False
+    return True
+
+
 def make_coffee(coffee_type):
+    """Process the coffee order if possible."""
     if coffee_type not in MENU:
         print("Invalid choice. Please select espresso, latte, or cappuccino.")
         return False
     
     # Check if resources are sufficient
-    for ingredient, amount in MENU[coffee_type]["ingredients"].items():
-        if resources[ingredient] < amount:
-            print(f"Sorry, there is not enough {ingredient}.")
-            return False
+    if not check_resources(coffee_type):
+        return False
     
-    #calculate the cost and process coins
+    # Calculate the cost and process coins
     cost = MENU[coffee_type]["cost"]
-    process_coins = process_coins()
-    if process_coins < cost:
+    print(f"The cost is ${cost:.2f}.")
+    payment = process_coins()
+    
+    if payment < cost:
         print("Sorry, that's not enough money. Money refunded.")
         return False
-    else:
-        change = process_coins - cost
-        print(f"Here is ${change:.2f} in change.")
-        resources["money"] += cost
+    
+    # Process payment and give change
+    change = payment - cost
+    print(f"Here is ${change:.2f} in change.")
+    resources["money"] += cost
 
     # Deduct ingredients from resources
     for ingredient, amount in MENU[coffee_type]["ingredients"].items():
         resources[ingredient] -= amount
     
     # Serve the coffee
-    if coffee_type == "espresso":
-        print("Here is your espresso ☕. Enjoy!")
-    elif coffee_type == "latte":
-        print("Here is your latte ☕. Enjoy!")
-    elif coffee_type == "cappuccino":
-        print("Here is your cappuccino ☕. Enjoy!")
+    print(f"Here is your {coffee_type} ☕. Enjoy!")
+    return True
 
 
+def display_report():
+    """Display the current resource levels."""
+    print(f"Water: {resources['water']}ml")
+    print(f"Milk: {resources['milk']}ml")
+    print(f"Coffee: {resources['coffee']}g")
+    print(f"Money: ${resources['money']:.2f}")
 
 
-while run:
-    print("What whould you like? (espresso/latte/cappuccino):")
-    choice = input().lower()
+def main():
+    """Run the coffee machine program."""
+    running = True
+    
+    while running:
+        print("\nWhat would you like? (espresso/latte/cappuccino):")
+        choice = input().lower()
 
-    if choice == "off":
-        run = False
-    elif choice == "report":
-        print(f"Water: {resources['water']}ml")
-        print(f"Milk: {resources['milk']}ml")
-        print(f"Coffee: {resources['coffee']}g")
-        print(f"Money: ${resources['money']:.2f}")
-    else: 
-        make_coffee(choice)
+        if choice == "off":
+            running = False
+            print("Coffee machine shutting down...")
+        elif choice == "report":
+            display_report()
+        else:
+            make_coffee(choice)
+
+
+if __name__ == "__main__":
+    main()
