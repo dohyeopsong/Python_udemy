@@ -1,41 +1,48 @@
-from turtle import Turtle, Screen
-import random
-import snake 
+from turtle import Screen
+from snake import Snake
+from food import Food
+from scoreboard import Scoreboard
+import time
 
 screen = Screen()
 screen.setup(width=600, height=600)
 screen.bgcolor("black")
 screen.title("My Snake Game")
-location_feed = random.randint(-280, 280)
-screen.tracer(0.5)  # Turns off the screen updates for smoother animation
-play = True
+screen.tracer(0)
 
+snake = Snake()
+food = Food()
+scoreboard = Scoreboard()
 
+screen.listen()
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.right, "Right")
 
+game_is_on = True
+while game_is_on:
+    screen.update()
+    time.sleep(0.1)
+    snake.move()
 
-for _ in range(3):
-    snake.SnakeSegment()
+    #Detect collision with food.
+    if snake.head.distance(food) < 15:
+        food.refresh()
+        snake.extend()
+        scoreboard.increase_score()
 
-while play:
-    snake.SnakeSegment.move_snake()
+    #Detect collision with wall.
+    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
+        game_is_on = False
+        scoreboard.game_over()
 
-    screen.listen()
-    screen.onkey(lambda: snake.snake_segments[0].setheading(90), "Up")
-    screen.onkey(lambda: snake.snake_segments[0].setheading(270), "Down")
-    screen.onkey(lambda: snake.snake_segments[0].setheading(0), "Right")
-    screen.onkey(lambda: snake.snake_segments[0].setheading(180), "Left")
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #Detect collision with tail.
+    for segment in snake.segments:
+        if segment == snake.head:
+            pass
+        elif snake.head.distance(segment) < 10:
+            game_is_on = False
+            scoreboard.game_over()
 
 screen.exitonclick()

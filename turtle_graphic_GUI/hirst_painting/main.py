@@ -32,7 +32,6 @@ number_of_dots = 100
 for dot_number in range(1,  number_of_dots + 1 ):
     tim.dot(20, random.choice(colours))
     tim.forward(50)
-
     if dot_number % 10 == 0:
         tim.setheading(90)
         tim.forward(50)
