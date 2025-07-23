@@ -35,6 +35,13 @@ class Snake:
         new_segment.goto(position)
         self.segments.append(new_segment)
 
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(1000, 1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
+
     def extend(self):
         """뱀이 음식을 먹었을 때 꼬리 부분에 몸통 조각을 하나 더 추가합니다."""
         self.add_segment(self.segments[-1].position())

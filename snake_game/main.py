@@ -42,16 +42,20 @@ while game_is_on:  # game_is_on이 True인 동안 게임 루프가 계속 실행
     # 벽과의 충돌 감지
     # 뱀 머리의 x 또는 y 좌표가 화면 경계(280)를 벗어나면 충돌한 것입니다.
     if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
-        game_is_on = False  # 게임을 종료하기 위해 game_is_on을 False로 바꿉니다.
-        scoreboard.game_over()  # 'GAME OVER' 메시지를 표시합니다.
+        # game_is_on = False  # 게임을 종료하기 위해 game_is_on을 False로 바꿉니다.
+        # scoreboard.game_over()  # 'GAME OVER' 메시지를 표시합니다.
+        scoreboard.reset()
+        snake.reset()
 
     # 꼬리와의 충돌 감지
     # 뱀의 머리를 제외한 나머지 몸통 조각들을 순회합니다.
     for segment in snake.segments[1:]:  # [1:]는 리스트의 두 번째 항목부터 끝까지를 의미합니다.
         # 뱀 머리가 몸통 조각 중 하나와 거리가 10픽셀보다 가까워지면 충돌한 것입니다.
         if snake.head.distance(segment) < 10:
-            game_is_on = False  # 게임을 종료합니다.
-            scoreboard.game_over()  # 'GAME OVER' 메시지를 표시합니다.
+            # game_is_on = False  # 게임을 종료합니다.
+            # scoreboard.game_over()  # 'GAME OVER' 메시지를 표시합니다.
+            scoreboard.reset()
+            snake.reset()
 
 # while 루프가 끝나면(게임 오버), 화면을 클릭해야 창이 닫히도록 합니다.
 screen.exitonclick()
