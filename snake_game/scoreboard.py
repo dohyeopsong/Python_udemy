@@ -13,7 +13,7 @@ class Scoreboard(Turtle):
         """Scoreboard 클래스가 처음 만들어질 때 실행되는 초기화 함수입니다."""
         super().__init__()
         self.score = 0  # 점수를 0으로 초기화합니다.
-        with open("/Users/dohyeopsong/Documents/Python_udemy/snake_game/data.txt") as data:
+        with open("./data.txt") as data:
             self.high_score = int(data.read())
         self.color("white")  # 글자색을 흰색으로 지정합니다.
         self.penup()  # 이동 시 그림이 그려지지 않게 펜을 올립니다.
@@ -30,7 +30,7 @@ class Scoreboard(Turtle):
     def reset(self):
         if self.score > self.high_score:
             self.high_score = self.score
-            with open("/Users/dohyeopsong/Documents/Python_udemy/snake_game/data.txt", mode="w") as data:
+            with open("./data.txt", mode="w") as data:
                 data.write(f"{self.high_score}")
         self.score = 0
         self.update_scoreboard()
